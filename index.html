@@ -34,9 +34,6 @@
               <label class="top-label" for="backend-language">Language</label>
               <select id="backend-language" name="backend-language">
                 <option value="">Select a backend language</option>
-                <option value="Ruby">Ruby</option>
-                <option value="Python">Python</option>
-                <option value="JavaScript (Node.js)">JavaScript (Node.js)</option>
               </select>
 
               <label class="top-label" for="backend-framework">Framework</label>
@@ -46,9 +43,7 @@
 
               <fieldset>
                 <legend class="top-label">Database</legend>
-                <label><input type="radio" name="database" value="Postgres" checked /> Postgres</label>
-                <label><input type="radio" name="database" value="MySQL" /> MySQL</label>
-                <label><input type="radio" name="database" value="SQLite" /> SQLite</label>
+                <div id="database-options" class="option-list"></div>
               </fieldset>
 
               <fieldset>
@@ -63,8 +58,6 @@
               <label for="frontend-framework">Framework</label>
               <select id="frontend-framework" name="frontend-framework">
                 <option value="">No frontend / backend only</option>
-                <option value="React">React</option>
-                <option value="Vue.js">Vue.js</option>
               </select>
 
               <fieldset>
@@ -88,6 +81,7 @@
       </section>
     </main>
 
+    <script src="./config.js"></script>
     <script src="./app.js"></script>
   </body>
 </html>

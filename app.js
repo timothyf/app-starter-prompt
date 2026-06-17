@@ -1,34 +1,28 @@
-const stackOptions = {
-  backend: {
-    Ruby: {
-      framework: "Ruby on Rails",
-      addons: ["RSpec", "RuboCop", "Devise", "DB Fixtures (seed-fu)"],
-    },
-    Python: {
-      framework: "Django",
-      addons: ["Pytest", "Ruff", "django-allauth"],
-    },
-    "JavaScript (Node.js)": {
-      framework: "Express",
-      addons: ["Jest", "ESLint", "Passport.js"],
-    },
-  },
-  frontend: {
-    React: ["React Testing Library", "ESLint", "Auth.js"],
-    "Vue.js": ["Vue Test Utils", "ESLint", "Auth.js"],
-  },
-};
-
 const form = document.querySelector("#stack-form");
 const appDescriptionInput = document.querySelector("#app-description");
 const backendLanguageSelect = document.querySelector("#backend-language");
 const backendFrameworkSelect = document.querySelector("#backend-framework");
 const frontendFrameworkSelect = document.querySelector("#frontend-framework");
+const databaseOptionsContainer = document.querySelector("#database-options");
 const backendAddonsContainer = document.querySelector("#backend-addons");
 const frontendAddonsContainer = document.querySelector("#frontend-addons");
 const promptOutput = document.querySelector("#prompt-output");
 const copyButton = document.querySelector("#copy-button");
 const copyStatus = document.querySelector("#copy-status");
+
+function createOption(value, text = value) {
+  const option = document.createElement("option");
+  option.value = value;
+  option.textContent = text;
+
+  return option;
+}
+
+function renderSelectOptions(select, values) {
+  values.forEach((value) => {
+    select.appendChild(createOption(value));
+  });
+}
 
 function renderCheckboxes(container, name, values) {
   container.innerHTML = "";
@@ -48,33 +42,66 @@ function renderCheckboxes(container, name, values) {
   });
 }
 
+function renderRadioButtons(container, name, values) {
+  container.innerHTML = "";
+
+  values.forEach((value, index) => {
+    const label = document.createElement("label");
+    const radio = document.createElement("input");
+
+    radio.type = "radio";
+    radio.name = name;
+    radio.value = value;
+    radio.checked = index === 0;
+
+    label.appendChild(radio);
+    label.append(` ${value}`);
+    container.appendChild(label);
+  });
+}
+
 function updateBackendOptions() {
   const selectedLanguage = backendLanguageSelect.value;
-  const backendConfig = stackOptions.backend[selectedLanguage];
+  const backendFrameworks = appConfig.backend.frameworks[selectedLanguage] || [];
 
   backendFrameworkSelect.innerHTML = '<option value="">Select a backend framework</option>';
 
-  if (!backendConfig) {
+  if (!backendFrameworks.length) {
     backendFrameworkSelect.disabled = true;
     renderCheckboxes(backendAddonsContainer, "backend-addon", []);
     return;
   }
 
-  const option = document.createElement("option");
-  option.value = backendConfig.framework;
-  option.textContent = backendConfig.framework;
-  option.selected = true;
+  backendFrameworks.forEach((framework, index) => {
+    const option = createOption(framework);
+    option.selected = index === 0;
 
-  backendFrameworkSelect.appendChild(option);
+    backendFrameworkSelect.appendChild(option);
+  });
   backendFrameworkSelect.disabled = false;
-  renderCheckboxes(backendAddonsContainer, "backend-addon", backendConfig.addons);
+  updateBackendAddons();
+}
+
+function updateBackendAddons() {
+  const selectedFramework = backendFrameworkSelect.value;
+  const backendAddons = appConfig.backend.addons[selectedFramework] || [];
+
+  renderCheckboxes(backendAddonsContainer, "backend-addon", backendAddons);
 }
 
 function updateFrontendOptions() {
   const selectedFramework = frontendFrameworkSelect.value;
-  const frontendAddons = stackOptions.frontend[selectedFramework] || [];
+  const frontendAddons = appConfig.frontend.addons[selectedFramework] || [];
 
   renderCheckboxes(frontendAddonsContainer, "frontend-addon", frontendAddons);
+}
+
+function initializeFormOptions() {
+  renderSelectOptions(backendLanguageSelect, appConfig.backend.languages);
+  renderSelectOptions(frontendFrameworkSelect, appConfig.frontend.frameworks);
+  renderRadioButtons(databaseOptionsContainer, "database", appConfig.databases);
+  updateBackendOptions();
+  updateFrontendOptions();
 }
 
 function getCheckedValues(name) {
@@ -188,6 +215,11 @@ backendLanguageSelect.addEventListener("change", () => {
   copyStatus.textContent = "";
 });
 
+backendFrameworkSelect.addEventListener("change", () => {
+  updateBackendAddons();
+  copyStatus.textContent = "";
+});
+
 frontendFrameworkSelect.addEventListener("change", () => {
   updateFrontendOptions();
   copyStatus.textContent = "";
@@ -211,5 +243,4 @@ form.addEventListener("submit", (event) => {
 
 copyButton.addEventListener("click", copyPrompt);
 
-updateBackendOptions();
-updateFrontendOptions();
+initializeFormOptions();
