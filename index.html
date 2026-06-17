@@ -11,7 +11,7 @@
       <section class="panel">
         <h1>App Starter Prompt</h1>
         <p class="intro">
-          Choose a frontend and backend stack to generate a reusable prompt for AI app builders.
+          Choose a backend stack and optional frontend to generate a reusable prompt for AI app builders.
         </p>
 
         <form id="stack-form" class="stack-form">
@@ -19,20 +19,20 @@
             <section class="stack-section">
               <h2>Backend</h2>
 
-              <label for="backend-language">Language</label>
+              <label class="top-label" for="backend-language">Language</label>
               <select id="backend-language" name="backend-language">
                 <option value="">Select a backend language</option>
                 <option value="Ruby">Ruby</option>
                 <option value="Python">Python</option>
               </select>
 
-              <label for="backend-framework">Framework</label>
+              <label class="top-label" for="backend-framework">Framework</label>
               <select id="backend-framework" name="backend-framework" disabled>
                 <option value="">Select a backend framework</option>
               </select>
 
               <fieldset>
-                <legend>Database</legend>
+                <legend class="top-label">Database</legend>
                 <label><input type="radio" name="database" value="Postgres" checked /> Postgres</label>
                 <label><input type="radio" name="database" value="MySQL" /> MySQL</label>
                 <label><input type="radio" name="database" value="SQLite" /> SQLite</label>
@@ -49,7 +49,7 @@
 
               <label for="frontend-framework">Framework</label>
               <select id="frontend-framework" name="frontend-framework">
-                <option value="">Select a frontend framework</option>
+                <option value="">No frontend / backend only</option>
                 <option value="React">React</option>
                 <option value="Vue.js">Vue.js</option>
               </select>

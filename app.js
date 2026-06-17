@@ -2,7 +2,7 @@ const stackOptions = {
   backend: {
     Ruby: {
       framework: "Ruby on Rails",
-      addons: ["RSpec", "Devise"],
+      addons: ["RSpec", "Devise", "DB Fixtures (seed-fu)"],
     },
     Python: {
       framework: "Django",
@@ -91,29 +91,43 @@ function buildPrompt() {
   const backendAddons = getCheckedValues("backend-addon");
   const frontendAddons = getCheckedValues("frontend-addon");
 
-  if (!backendLanguage || !backendFramework || !frontendFramework) {
+  if (!backendLanguage || !backendFramework) {
     return "";
   }
 
-  return [
+  const promptLines = [
     "Build a production-ready web application using the following technology stack:",
-    "",
-    "Frontend:",
-    `- Framework: ${frontendFramework}`,
-    `- Add-ons: ${frontendAddons.length ? frontendAddons.join(", ") : "None selected"}`,
     "",
     "Backend:",
     `- Language: ${backendLanguage}`,
     `- Framework: ${backendFramework}`,
     `- Database: ${database}`,
     `- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`,
+  ];
+
+  if (frontendFramework) {
+    promptLines.push(
+      "",
+      "Frontend:",
+      `- Framework: ${frontendFramework}`,
+      `- Add-ons: ${frontendAddons.length ? frontendAddons.join(", ") : "None selected"}`,
+    );
+  } else {
+    promptLines.push("", "Frontend: None selected. Build a backend-only application.");
+  }
+
+  promptLines.push(
     "",
     "Please include:",
     "- A clear project structure for the selected stack.",
     "- User login and authentication using the selected add-ons where applicable.",
     "- Automated test coverage using the selected testing tools.",
-    "- Setup instructions for running the frontend and backend locally.",
-  ].join("\n");
+    frontendFramework
+      ? "- Setup instructions for running the frontend and backend locally."
+      : "- Setup instructions for running the backend locally.",
+  );
+
+  return promptLines.join("\n");
 }
 
 function fallbackCopy(text) {
@@ -172,7 +186,7 @@ form.addEventListener("submit", (event) => {
   const prompt = buildPrompt();
 
   if (!prompt) {
-    promptOutput.textContent = "Please select a backend language, backend framework, and frontend framework.";
+    promptOutput.textContent = "Please select a backend language and backend framework.";
     copyButton.disabled = true;
     return;
   }

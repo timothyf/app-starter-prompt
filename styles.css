@@ -119,6 +119,19 @@ body {
   margin-bottom: 0;
 }
 
+fieldset {
+  margin-top: 25px;
+}
+
+.top-label {
+  margin-top: 25px;
+}
+
+h2 {
+  margin-top: 0px !important;
+  margin-bottom: 25px;
+}
+
 @media (min-width: 800px) {
   .stack-sections {
     grid-template-columns: repeat(2, minmax(0, 1fr));
