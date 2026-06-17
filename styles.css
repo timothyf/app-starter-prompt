@@ -40,6 +40,10 @@ body {
   background: #f8fbff;
 }
 
+.app-description-section {
+  margin-bottom: 20px;
+}
+
 .stack-form label,
 .stack-form legend {
   display: block;
@@ -47,6 +51,8 @@ body {
   font-weight: 700;
 }
 
+.stack-form input[type="text"],
+.stack-form textarea,
 .stack-form select,
 .primary-action,
 #copy-button {

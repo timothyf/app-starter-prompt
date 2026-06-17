@@ -20,6 +20,7 @@ const stackOptions = {
 };
 
 const form = document.querySelector("#stack-form");
+const appDescriptionInput = document.querySelector("#app-description");
 const backendLanguageSelect = document.querySelector("#backend-language");
 const backendFrameworkSelect = document.querySelector("#backend-framework");
 const frontendFrameworkSelect = document.querySelector("#frontend-framework");
@@ -88,6 +89,7 @@ function getSelectedDatabase() {
 }
 
 function buildPrompt() {
+  const appDescription = appDescriptionInput.value.trim();
   const backendLanguage = backendLanguageSelect.value;
   const backendFramework = backendFrameworkSelect.value;
   const database = getSelectedDatabase();
@@ -101,13 +103,20 @@ function buildPrompt() {
 
   const promptLines = [
     "Build a production-ready web application using the following technology stack:",
+  ];
+
+  if (appDescription) {
+    promptLines.push("", "App Description:", appDescription);
+  }
+
+  promptLines.push(
     "",
     "Backend:",
     `- Language: ${backendLanguage}`,
     `- Framework: ${backendFramework}`,
     `- Database: ${database}`,
     `- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`,
-  ];
+  );
 
   if (frontendFramework) {
     promptLines.push(
