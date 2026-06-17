@@ -8,6 +8,10 @@ const stackOptions = {
       framework: "Django",
       addons: ["Pytest", "Ruff", "django-allauth"],
     },
+    "JavaScript (Node.js)": {
+      framework: "Express",
+      addons: ["Jest", "ESLint", "Passport.js"],
+    },
   },
   frontend: {
     React: ["React Testing Library", "ESLint", "Auth.js"],
