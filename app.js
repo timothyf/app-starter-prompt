@@ -2,16 +2,16 @@ const stackOptions = {
   backend: {
     Ruby: {
       framework: "Ruby on Rails",
-      addons: ["RSpec", "Devise", "DB Fixtures (seed-fu)"],
+      addons: ["RSpec", "RuboCop", "Devise", "DB Fixtures (seed-fu)"],
     },
     Python: {
       framework: "Django",
-      addons: ["Pytest", "django-allauth"],
+      addons: ["Pytest", "Ruff", "django-allauth"],
     },
   },
   frontend: {
-    React: ["React Testing Library", "Auth.js"],
-    "Vue.js": ["Vue Test Utils", "Auth.js"],
+    React: ["React Testing Library", "ESLint", "Auth.js"],
+    "Vue.js": ["Vue Test Utils", "ESLint", "Auth.js"],
   },
 };
 
