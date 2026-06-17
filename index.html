@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>App Starter Prompt</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="panel">
+        <h1>App Starter Prompt</h1>
+        <p class="intro">
+          Choose a frontend and backend stack to generate a reusable prompt for AI app builders.
+        </p>
+
+        <form id="stack-form" class="stack-form">
+          <div class="stack-sections">
+            <section class="stack-section">
+              <h2>Backend</h2>
+
+              <label for="backend-language">Language</label>
+              <select id="backend-language" name="backend-language">
+                <option value="">Select a backend language</option>
+                <option value="Ruby">Ruby</option>
+                <option value="Python">Python</option>
+              </select>
+
+              <label for="backend-framework">Framework</label>
+              <select id="backend-framework" name="backend-framework" disabled>
+                <option value="">Select a backend framework</option>
+              </select>
+
+              <fieldset>
+                <legend>Database</legend>
+                <label><input type="radio" name="database" value="Postgres" checked /> Postgres</label>
+                <label><input type="radio" name="database" value="MySQL" /> MySQL</label>
+                <label><input type="radio" name="database" value="SQLite" /> SQLite</label>
+              </fieldset>
+
+              <fieldset>
+                <legend>Add-ons</legend>
+                <div id="backend-addons" class="option-list"></div>
+              </fieldset>
+            </section>
+
+            <section class="stack-section">
+              <h2>Frontend</h2>
+
+              <label for="frontend-framework">Framework</label>
+              <select id="frontend-framework" name="frontend-framework">
+                <option value="">Select a frontend framework</option>
+                <option value="React">React</option>
+                <option value="Vue.js">Vue.js</option>
+              </select>
+
+              <fieldset>
+                <legend>Add-ons</legend>
+                <div id="frontend-addons" class="option-list"></div>
+              </fieldset>
+            </section>
+          </div>
+
+          <button type="submit" class="primary-action">Generate Prompt</button>
+        </form>
+      </section>
+
+      <section class="panel output-panel">
+        <div class="output-header">
+          <h2>Generated Prompt</h2>
+          <button id="copy-button" type="button" disabled>Copy Prompt</button>
+        </div>
+        <pre id="prompt-output" class="prompt-output">Select your stack and generate a prompt.</pre>
+        <p id="copy-status" class="copy-status" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
