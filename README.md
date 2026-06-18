@@ -10,4 +10,8 @@ This repository is configured to deploy to GitHub Pages via GitHub Actions on pu
 
 After enabling Pages in the repository settings (Build and deployment source: **GitHub Actions**), the site will be available at:
 
+`https://<username>.github.io/<repository-name>/`
+
+For this repository, that URL is:
+
 `https://timothyf.github.io/app-starter-prompt/`
