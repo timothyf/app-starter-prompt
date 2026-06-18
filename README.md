@@ -12,6 +12,6 @@ After enabling Pages in the repository settings (Build and deployment source: **
 
 `https://<username>.github.io/<repository-name>/`
 
-For this repository, that URL is:
+Example:
 
-`https://timothyf.github.io/app-starter-prompt/`
+`https://yourusername.github.io/app-starter-prompt/`
