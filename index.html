@@ -36,15 +36,36 @@
                 <option value="">Select a backend language</option>
               </select>
 
+              <div id="backend-language-version-group" hidden>
+                <label class="top-label" for="backend-language-version" id="backend-language-version-label">Language Version</label>
+                <select id="backend-language-version" name="backend-language-version" disabled>
+                  <option value="">Select a version</option>
+                </select>
+              </div>
+
               <label class="top-label" for="backend-framework">Framework</label>
               <select id="backend-framework" name="backend-framework" disabled>
                 <option value="">Select a backend framework</option>
               </select>
 
-              <fieldset>
-                <legend class="top-label">Database</legend>
-                <div id="database-options" class="option-list"></div>
-              </fieldset>
+              <div id="backend-version-group" hidden>
+                <label class="top-label" for="backend-version" id="backend-version-label">Framework Version</label>
+                <select id="backend-version" name="backend-version" disabled>
+                  <option value="">Select a version</option>
+                </select>
+              </div>
+
+              <label class="top-label" for="database">Database</label>
+              <select id="database" name="database">
+                <option value="">No database selected</option>
+              </select>
+
+              <div id="database-version-group" hidden>
+                <label class="top-label" for="database-version" id="database-version-label">Database Version</label>
+                <select id="database-version" name="database-version" disabled>
+                  <option value="">Select a version</option>
+                </select>
+              </div>
 
               <fieldset>
                 <legend>Add-ons</legend>

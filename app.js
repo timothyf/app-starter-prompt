@@ -1,9 +1,18 @@
 const form = document.querySelector("#stack-form");
 const appDescriptionInput = document.querySelector("#app-description");
 const backendLanguageSelect = document.querySelector("#backend-language");
+const backendLanguageVersionGroup = document.querySelector("#backend-language-version-group");
+const backendLanguageVersionLabel = document.querySelector("#backend-language-version-label");
+const backendLanguageVersionSelect = document.querySelector("#backend-language-version");
 const backendFrameworkSelect = document.querySelector("#backend-framework");
+const backendVersionGroup = document.querySelector("#backend-version-group");
+const backendVersionLabel = document.querySelector("#backend-version-label");
+const backendVersionSelect = document.querySelector("#backend-version");
 const frontendFrameworkSelect = document.querySelector("#frontend-framework");
-const databaseOptionsContainer = document.querySelector("#database-options");
+const databaseSelect = document.querySelector("#database");
+const databaseVersionGroup = document.querySelector("#database-version-group");
+const databaseVersionLabel = document.querySelector("#database-version-label");
+const databaseVersionSelect = document.querySelector("#database-version");
 const backendAddonsContainer = document.querySelector("#backend-addons");
 const frontendAddonsContainer = document.querySelector("#frontend-addons");
 const promptOutput = document.querySelector("#prompt-output");
@@ -42,24 +51,6 @@ function renderCheckboxes(container, name, values) {
   });
 }
 
-function renderRadioButtons(container, name, values) {
-  container.innerHTML = "";
-
-  values.forEach((value, index) => {
-    const label = document.createElement("label");
-    const radio = document.createElement("input");
-
-    radio.type = "radio";
-    radio.name = name;
-    radio.value = value;
-    radio.checked = index === 0;
-
-    label.appendChild(radio);
-    label.append(` ${value}`);
-    container.appendChild(label);
-  });
-}
-
 function updateBackendOptions() {
   const selectedLanguage = backendLanguageSelect.value;
   const backendFrameworks = appConfig.backend.frameworks[selectedLanguage] || [];
@@ -68,6 +59,7 @@ function updateBackendOptions() {
 
   if (!backendFrameworks.length) {
     backendFrameworkSelect.disabled = true;
+    updateBackendVersions();
     renderCheckboxes(backendAddonsContainer, "backend-addon", []);
     return;
   }
@@ -79,12 +71,64 @@ function updateBackendOptions() {
     backendFrameworkSelect.appendChild(option);
   });
   backendFrameworkSelect.disabled = false;
+  updateBackendVersions();
   updateBackendAddons();
 }
 
-function updateBackendAddons() {
+function updateBackendLanguageVersions() {
+  const selectedLanguage = backendLanguageSelect.value;
+  const versions = (appConfig.backend.languageVersions || {})[selectedLanguage] || [];
+
+  backendLanguageVersionSelect.innerHTML = '<option value="">Select a version</option>';
+
+  if (!versions.length) {
+    backendLanguageVersionGroup.hidden = true;
+    backendLanguageVersionSelect.disabled = true;
+    backendLanguageVersionLabel.textContent = "Language Version";
+    return;
+  }
+
+  versions.forEach((version, index) => {
+    const option = createOption(version);
+    option.selected = index === versions.length - 1;
+
+    backendLanguageVersionSelect.appendChild(option);
+  });
+  backendLanguageVersionLabel.textContent = `${selectedLanguage} Version`;
+  backendLanguageVersionGroup.hidden = false;
+  backendLanguageVersionSelect.disabled = false;
+}
+
+function updateBackendVersions() {
   const selectedFramework = backendFrameworkSelect.value;
-  const backendAddons = appConfig.backend.addons[selectedFramework] || [];
+  const versions = (appConfig.backend.versions || {})[selectedFramework] || [];
+
+  backendVersionSelect.innerHTML = '<option value="">Select a version</option>';
+
+  if (!versions.length) {
+    backendVersionGroup.hidden = true;
+    backendVersionSelect.disabled = true;
+    backendVersionLabel.textContent = "Framework Version";
+    return;
+  }
+
+  versions.forEach((version, index) => {
+    const option = createOption(version);
+    option.selected = index === versions.length - 1;
+
+    backendVersionSelect.appendChild(option);
+  });
+  backendVersionLabel.textContent = `${selectedFramework} Version`;
+  backendVersionGroup.hidden = false;
+  backendVersionSelect.disabled = false;
+}
+
+function updateBackendAddons() {
+  const selectedLanguage = backendLanguageSelect.value;
+  const selectedFramework = backendFrameworkSelect.value;
+  const languageAddons = (appConfig.backend.languageAddons || {})[selectedLanguage] || [];
+  const frameworkAddons = appConfig.backend.addons[selectedFramework] || [];
+  const backendAddons = [...languageAddons, ...frameworkAddons];
 
   renderCheckboxes(backendAddonsContainer, "backend-addon", backendAddons);
 }
@@ -99,7 +143,10 @@ function updateFrontendOptions() {
 function initializeFormOptions() {
   renderSelectOptions(backendLanguageSelect, appConfig.backend.languages);
   renderSelectOptions(frontendFrameworkSelect, appConfig.frontend.frameworks);
-  renderRadioButtons(databaseOptionsContainer, "database", appConfig.databases);
+  renderSelectOptions(databaseSelect, appConfig.databases);
+  databaseSelect.value = "";
+  updateDatabaseVersions();
+  updateBackendLanguageVersions();
   updateBackendOptions();
   updateFrontendOptions();
 }
@@ -111,15 +158,41 @@ function getCheckedValues(name) {
 }
 
 function getSelectedDatabase() {
-  const selectedDatabase = document.querySelector('input[name="database"]:checked');
-  return selectedDatabase ? selectedDatabase.value : "";
+  return databaseSelect.value;
+}
+
+function updateDatabaseVersions() {
+  const selectedDatabase = getSelectedDatabase();
+  const versions = (appConfig.databaseVersions || {})[selectedDatabase] || [];
+
+  databaseVersionSelect.innerHTML = '<option value="">Select a version</option>';
+
+  if (!versions.length) {
+    databaseVersionGroup.hidden = true;
+    databaseVersionSelect.disabled = true;
+    databaseVersionLabel.textContent = "Database Version";
+    return;
+  }
+
+  versions.forEach((version, index) => {
+    const option = createOption(version);
+    option.selected = index === versions.length - 1;
+
+    databaseVersionSelect.appendChild(option);
+  });
+  databaseVersionLabel.textContent = `${selectedDatabase} Version`;
+  databaseVersionGroup.hidden = false;
+  databaseVersionSelect.disabled = false;
 }
 
 function buildPrompt() {
   const appDescription = appDescriptionInput.value.trim();
   const backendLanguage = backendLanguageSelect.value;
+  const backendLanguageVersion = backendLanguageVersionGroup.hidden ? "" : backendLanguageVersionSelect.value;
   const backendFramework = backendFrameworkSelect.value;
+  const backendVersion = backendVersionGroup.hidden ? "" : backendVersionSelect.value;
   const database = getSelectedDatabase();
+  const databaseVersion = databaseVersionGroup.hidden ? "" : databaseVersionSelect.value;
   const frontendFramework = frontendFrameworkSelect.value;
   const backendAddons = getCheckedValues("backend-addon");
   const frontendAddons = getCheckedValues("frontend-addon");
@@ -139,11 +212,15 @@ function buildPrompt() {
   promptLines.push(
     "",
     "Backend:",
-    `- Language: ${backendLanguage}`,
-    `- Framework: ${backendFramework}`,
-    `- Database: ${database}`,
-    `- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`,
+    `- Language: ${backendLanguageVersion ? `${backendLanguage} ${backendLanguageVersion}` : backendLanguage}`,
+    `- Framework: ${backendVersion ? `${backendFramework} ${backendVersion}` : backendFramework}`,
   );
+
+  if (database) {
+    promptLines.push(`- Database: ${databaseVersion ? `${database} ${databaseVersion}` : database}`);
+  }
+
+  promptLines.push(`- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`);
 
   if (frontendFramework) {
     promptLines.push(
@@ -211,12 +288,31 @@ async function copyPrompt() {
 }
 
 backendLanguageSelect.addEventListener("change", () => {
+  updateBackendLanguageVersions();
   updateBackendOptions();
   copyStatus.textContent = "";
 });
 
+backendLanguageVersionSelect.addEventListener("change", () => {
+  copyStatus.textContent = "";
+});
+
 backendFrameworkSelect.addEventListener("change", () => {
+  updateBackendVersions();
   updateBackendAddons();
+  copyStatus.textContent = "";
+});
+
+backendVersionSelect.addEventListener("change", () => {
+  copyStatus.textContent = "";
+});
+
+databaseVersionSelect.addEventListener("change", () => {
+  copyStatus.textContent = "";
+});
+
+databaseSelect.addEventListener("change", () => {
+  updateDatabaseVersions();
   copyStatus.textContent = "";
 });
 
