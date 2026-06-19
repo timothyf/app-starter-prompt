@@ -28,18 +28,22 @@ const appConfig = {
     },
   },
   frontend: {
-    frameworks: ["React", "Vue.js"],
+    frameworks: ["React", "Vue.js", "Angular"],
     addons: {
       React: ["ESLint", "Auth.js"],
       "Vue.js": ["ESLint", "Auth.js"],
+      Angular: ["ESLint", "Auth.js"],
     },
     testing: {
       React: ["React Testing Library"],
       "Vue.js": ["Vue Test Utils"],
+      Angular: ["Karma", "Jasmine"],
     },
   },
   databases: ["Postgres", "MySQL", "SQLite"],
   databaseVersions: {
     Postgres: ["16", "17", "18"],
+    MySQL: ["8.0", "8.1"],
+    SQLite: ["3.40", "3.41"],
   },
 };
