@@ -16,17 +16,26 @@ const appConfig = {
       "Ruby on Rails": ["7.2", "8.1"],
     },
     addons: {
-      "Ruby on Rails": ["RSpec", "RuboCop", "Devise (for User authentication)", "DB Fixtures (seed-fu)", 
+      "Ruby on Rails": ["RuboCop", "Devise (for User authentication)", "DB Fixtures (seed-fu)", 
                         "Faker (for generating test data)", "Pagy (for pagination)"],
-      Django: ["Pytest", "Ruff", "django-allauth"],
-      Express: ["Jest", "ESLint", "Passport.js"],
+      Django: ["Ruff", "django-allauth"],
+      Express: ["ESLint", "Passport.js"],
+    },
+    testing: {
+      "Ruby on Rails": ["RSpec"],
+      Django: ["Pytest"],
+      Express: ["Jest"],
     },
   },
   frontend: {
     frameworks: ["React", "Vue.js"],
     addons: {
-      React: ["React Testing Library", "ESLint", "Auth.js"],
-      "Vue.js": ["Vue Test Utils", "ESLint", "Auth.js"],
+      React: ["ESLint", "Auth.js"],
+      "Vue.js": ["ESLint", "Auth.js"],
+    },
+    testing: {
+      React: ["React Testing Library"],
+      "Vue.js": ["Vue Test Utils"],
     },
   },
   databases: ["Postgres", "MySQL", "SQLite"],

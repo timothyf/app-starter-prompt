@@ -14,7 +14,9 @@ const databaseVersionGroup = document.querySelector("#database-version-group");
 const databaseVersionLabel = document.querySelector("#database-version-label");
 const databaseVersionSelect = document.querySelector("#database-version");
 const backendAddonsContainer = document.querySelector("#backend-addons");
+const backendTestingContainer = document.querySelector("#backend-testing");
 const frontendAddonsContainer = document.querySelector("#frontend-addons");
+const frontendTestingContainer = document.querySelector("#frontend-testing");
 const promptOutput = document.querySelector("#prompt-output");
 const copyButton = document.querySelector("#copy-button");
 const copyStatus = document.querySelector("#copy-status");
@@ -61,6 +63,7 @@ function updateBackendOptions() {
     backendFrameworkSelect.disabled = true;
     updateBackendVersions();
     renderCheckboxes(backendAddonsContainer, "backend-addon", []);
+    renderCheckboxes(backendTestingContainer, "backend-testing", []);
     return;
   }
 
@@ -73,6 +76,7 @@ function updateBackendOptions() {
   backendFrameworkSelect.disabled = false;
   updateBackendVersions();
   updateBackendAddons();
+  updateBackendTesting();
 }
 
 function updateBackendLanguageVersions() {
@@ -133,11 +137,26 @@ function updateBackendAddons() {
   renderCheckboxes(backendAddonsContainer, "backend-addon", backendAddons);
 }
 
+function updateBackendTesting() {
+  const selectedFramework = backendFrameworkSelect.value;
+  const backendTesting = (appConfig.backend.testing || {})[selectedFramework] || [];
+
+  renderCheckboxes(backendTestingContainer, "backend-testing", backendTesting);
+}
+
 function updateFrontendOptions() {
   const selectedFramework = frontendFrameworkSelect.value;
   const frontendAddons = appConfig.frontend.addons[selectedFramework] || [];
 
   renderCheckboxes(frontendAddonsContainer, "frontend-addon", frontendAddons);
+  updateFrontendTesting();
+}
+
+function updateFrontendTesting() {
+  const selectedFramework = frontendFrameworkSelect.value;
+  const frontendTesting = (appConfig.frontend.testing || {})[selectedFramework] || [];
+
+  renderCheckboxes(frontendTestingContainer, "frontend-testing", frontendTesting);
 }
 
 function initializeFormOptions() {
@@ -195,7 +214,9 @@ function buildPrompt() {
   const databaseVersion = databaseVersionGroup.hidden ? "" : databaseVersionSelect.value;
   const frontendFramework = frontendFrameworkSelect.value;
   const backendAddons = getCheckedValues("backend-addon");
+  const backendTesting = getCheckedValues("backend-testing");
   const frontendAddons = getCheckedValues("frontend-addon");
+  const frontendTesting = getCheckedValues("frontend-testing");
 
   if (!backendLanguage || !backendFramework) {
     return "";
@@ -221,6 +242,7 @@ function buildPrompt() {
   }
 
   promptLines.push(`- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`);
+  promptLines.push(`- Testing: ${backendTesting.length ? backendTesting.join(", ") : "None selected"}`);
 
   if (frontendFramework) {
     promptLines.push(
@@ -228,6 +250,7 @@ function buildPrompt() {
       "Frontend:",
       `- Framework: ${frontendFramework}`,
       `- Add-ons: ${frontendAddons.length ? frontendAddons.join(", ") : "None selected"}`,
+      `- Testing: ${frontendTesting.length ? frontendTesting.join(", ") : "None selected"}`,
     );
   } else {
     promptLines.push("", "Frontend: None selected. Build a backend-only application.");
@@ -300,6 +323,7 @@ backendLanguageVersionSelect.addEventListener("change", () => {
 backendFrameworkSelect.addEventListener("change", () => {
   updateBackendVersions();
   updateBackendAddons();
+  updateBackendTesting();
   copyStatus.textContent = "";
 });
 
