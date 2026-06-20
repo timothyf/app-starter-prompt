@@ -15,6 +15,8 @@ const databaseVersionLabel = document.querySelector("#database-version-label");
 const databaseVersionSelect = document.querySelector("#database-version");
 const backendAddonsContainer = document.querySelector("#backend-addons");
 const backendTestingContainer = document.querySelector("#backend-testing");
+const backendAdminUIGroup = document.querySelector("#backend-admin-ui-group");
+const backendAdminUIContainer = document.querySelector("#backend-admin-ui");
 const frontendAddonsContainer = document.querySelector("#frontend-addons");
 const frontendTestingContainer = document.querySelector("#frontend-testing");
 const promptOutput = document.querySelector("#prompt-output");
@@ -64,6 +66,8 @@ function updateBackendOptions() {
     updateBackendVersions();
     renderCheckboxes(backendAddonsContainer, "backend-addon", []);
     renderCheckboxes(backendTestingContainer, "backend-testing", []);
+    backendAdminUIGroup.hidden = true;
+    renderCheckboxes(backendAdminUIContainer, "backend-admin-ui", []);
     return;
   }
 
@@ -77,6 +81,7 @@ function updateBackendOptions() {
   updateBackendVersions();
   updateBackendAddons();
   updateBackendTesting();
+  updateBackendAdminUI();
 }
 
 function updateBackendLanguageVersions() {
@@ -142,6 +147,20 @@ function updateBackendTesting() {
   const backendTesting = (appConfig.backend.testing || {})[selectedFramework] || [];
 
   renderCheckboxes(backendTestingContainer, "backend-testing", backendTesting);
+}
+
+function updateBackendAdminUI() {
+  const selectedFramework = backendFrameworkSelect.value;
+  const adminUIOptions = (appConfig.backend.adminUI || {})[selectedFramework] || [];
+
+  if (!adminUIOptions.length) {
+    backendAdminUIGroup.hidden = true;
+    renderCheckboxes(backendAdminUIContainer, "backend-admin-ui", []);
+    return;
+  }
+
+  backendAdminUIGroup.hidden = false;
+  renderCheckboxes(backendAdminUIContainer, "backend-admin-ui", adminUIOptions);
 }
 
 function updateFrontendOptions() {
@@ -215,6 +234,7 @@ function buildPrompt() {
   const frontendFramework = frontendFrameworkSelect.value;
   const backendAddons = getCheckedValues("backend-addon");
   const backendTesting = getCheckedValues("backend-testing");
+  const backendAdminUI = getCheckedValues("backend-admin-ui");
   const frontendAddons = getCheckedValues("frontend-addon");
   const frontendTesting = getCheckedValues("frontend-testing");
 
@@ -243,6 +263,10 @@ function buildPrompt() {
 
   promptLines.push(`- Add-ons: ${backendAddons.length ? backendAddons.join(", ") : "None selected"}`);
   promptLines.push(`- Testing: ${backendTesting.length ? backendTesting.join(", ") : "None selected"}`);
+
+  if (!backendAdminUIGroup.hidden) {
+    promptLines.push(`- Admin UI: ${backendAdminUI.length ? backendAdminUI.join(", ") : "None selected"}`);
+  }
 
   if (frontendFramework) {
     promptLines.push(
@@ -324,6 +348,7 @@ backendFrameworkSelect.addEventListener("change", () => {
   updateBackendVersions();
   updateBackendAddons();
   updateBackendTesting();
+  updateBackendAdminUI();
   copyStatus.textContent = "";
 });
 
