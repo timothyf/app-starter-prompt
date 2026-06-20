@@ -159,8 +159,8 @@ function updateBackendAdminUI() {
     return;
   }
 
-  renderCheckboxes(backendAdminUIContainer, "backend-admin-ui", adminUIOptions);
   backendAdminUIGroup.hidden = false;
+  renderCheckboxes(backendAdminUIContainer, "backend-admin-ui", adminUIOptions);
 }
 
 function updateFrontendOptions() {
