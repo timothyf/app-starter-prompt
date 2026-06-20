@@ -26,6 +26,9 @@ const appConfig = {
       Django: ["Pytest"],
       Express: ["Jest"],
     },
+    adminUI: {
+      "Ruby on Rails": ["ActiveAdmin", "Avo", "Administrate"],
+    },
   },
   frontend: {
     frameworks: ["React", "Vue.js", "Angular"],
